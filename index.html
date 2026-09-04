@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PROCUREX — Connecting Government with Innovation</title>
+    <meta
+      name="description"
+      content="PROCUREX is a digital innovation platform that brings public sector challenges and startup solutions together — discover, evaluate, pilot and procure innovation for public needs."
+    />
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Plus Jakarta Sans + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+            },
+            colors: {
+              background: '#f4f5f9',
+              foreground: '#1f2233',
+              card: '#ffffff',
+              muted: '#eef0f6',
+              'muted-foreground': '#6b7186',
+              secondary: '#eef0f6',
+              'secondary-foreground': '#3a3f57',
+              border: '#e2e5ee',
+              brand: '#2b45d4',
+              'brand-foreground': '#ffffff',
+              innovate: '#e8722a',
+              'innovate-foreground': '#ffffff',
+              sidebar: '#1b2138',
+              'sidebar-foreground': '#c9cee0',
+              'sidebar-accent': '#2a3150',
+              'sidebar-accent-foreground': '#f4f5fb',
+              success: '#3aa76d',
+            },
+            borderRadius: {
+              lg: '0.75rem',
+              xl: '1rem',
+              '2xl': '1.25rem',
+              '3xl': '1.75rem',
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      /* Hide scrollbar on sidebar for a cleaner look */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen bg-background text-foreground antialiased">
+    <!-- ================= MOBILE TOP BAR ================= -->
+    <div
+      class="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-sidebar px-4 py-3 lg:hidden"
+    >
+      <div class="flex items-center gap-2">
+        <div
+          class="flex size-8 items-center justify-center rounded-lg bg-brand text-sm font-bold text-brand-foreground"
+        >
+          PX
+        </div>
+        <span class="font-bold text-sidebar-foreground">PROCUREX</span>
+      </div>
+      <button
+        type="button"
+        id="openMenuBtn"
+        class="rounded-lg p-2 text-sidebar-foreground hover:bg-sidebar-accent"
+        aria-label="Open menu"
+      >
+        <i data-lucide="menu" class="size-5"></i>
+      </button>
+    </div>
+
+    <!-- ================= DESKTOP SIDEBAR ================= -->
+    <aside
+      class="fixed inset-y-0 left-0 z-40 hidden w-64 bg-sidebar lg:block"
+    >
+      <div class="flex h-full flex-col no-scrollbar overflow-y-auto">
+        <!-- Logo -->
+        <div class="flex items-center gap-3 px-6 py-6">
+          <div
+            class="flex size-11 items-center justify-center rounded-xl bg-brand font-bold text-brand-foreground"
+          >
+            PX
+          </div>
+          <div class="leading-tight">
+            <p class="text-base font-bold tracking-tight text-sidebar-foreground">
+              PROCUREX
+            </p>
+            <p class="text-xs text-sidebar-foreground/60">Innovation Platform</p>
+          </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex-1 px-4">
+          <p
+            class="px-3 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-widest text-sidebar-foreground/45"
+          >
+            Main Menu
+          </p>
+          <ul class="flex flex-col gap-1">
+            <li>
+              <a
+                href="#top"
+                class="nav-link flex items-center gap-3 rounded-lg bg-sidebar-foreground px-3 py-2.5 text-sm font-medium text-sidebar shadow-sm"
+              >
+                <i data-lucide="home" class="size-[18px]"></i>
+                Home
+              </a>
+            </li>
+            <li>
+              <a
+                href="#workspace"
+                class="nav-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              >
+                <i data-lucide="landmark" class="size-[18px]"></i>
+                Government
+              </a>
+            </li>
+            <li>
+              <a
+                href="#workspace"
+                class="nav-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              >
+                <i data-lucide="rocket" class="size-[18px]"></i>
+                Startups
+              </a>
+            </li>
+            <li>
+              <a
+                href="#challenges"
+                class="nav-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              >
+                <i data-lucide="sparkles" class="size-[18px]"></i>
+                Innovation Hub
+              </a>
+            </li>
+          </ul>
+
+          <p
+            class="px-3 pb-2 pt-6 text-[11px] font-semibold uppercase tracking-widest text-sidebar-foreground/45"
+          >
+            Support
+          </p>
+          <ul class="flex flex-col gap-1">
+            <li>
+              <a
+                href="#how"
+                class="nav-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              >
+                <i data-lucide="info" class="size-[18px]"></i>
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                href="#how"
+                class="nav-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/75 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              >
+                <i data-lucide="life-buoy" class="size-[18px]"></i>
+                Help
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Secure badge -->
+        <div class="p-4">
+          <div
+            class="flex items-center gap-3 rounded-xl bg-sidebar-accent px-4 py-3"
+          >
+            <div
+              class="flex size-8 items-center justify-center rounded-lg bg-success/20 text-success"
+            >
+              <i data-lucide="shield-check" class="size-[18px]"></i>
+            </div>
+            <div class="leading-tight">
+              <p class="text-sm font-semibold text-sidebar-accent-foreground">
+                Secure
+              </p>
+              <p class="text-xs text-sidebar-foreground/60">Platform</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= MOBILE DRAWER ================= -->
+    <div id="mobileDrawer" class="fixed inset-0 z-50 hidden lg:hidden">
+      <div id="drawerOverlay" class="absolute inset-0 bg-black/50"></div>
+      <aside
+        class="absolute inset-y-0 left-0 w-64 bg-sidebar overflow-y-auto no-scrollbar"
+      >
+        <button
+          type="button"
+          id="closeMenuBtn"
+          class="absolute right-3 top-4 rounded-lg p-2 text-sidebar-foreground hover:bg-sidebar-accent"
+          aria-label="Close menu"
+        >
+          <i data-lucide="x" class="size-5"></i>
+        </button>
+
+        <div class="flex items-center gap-3 px-6 py-6">
+          <div
+            class="flex size-11 items-center justify-center rounded-xl bg-brand font-bold text-brand-foreground"
+          >
+            PX
+          </div>
+          <div class="leading-tight">
+            <p class="text-base font-bold tracking-tight text-sidebar-foreground">
+              PROCUREX
+            </p>
+            <p class="text-xs text-sidebar-foreground/60">Innovation Platform</p>
+          </div>
+        </div>
+
+        <nav class="px-4 pb-6">
+          <p
+            class="px-3 pb-2 pt-4 text-[11px] font-semibold uppercase tracking-widest text-sidebar-foreground/45"
+          >
+            Main Menu
+          </p>
+          <ul class="flex flex-col gap-1">
+            <li>
+              <a href="#top" class="drawer-link flex items-center gap-3 rounded-lg bg-sidebar-foreground px-3 py-2.5 text-sm font-medium text-sidebar">
+                <i data-lucide="home" class="size-[18px]"></i> Home
+              </a>
+            </li>
+            <li>
+              <a href="#workspace" class="drawer-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                <i data-lucide="landmark" class="size-[18px]"></i> Government
+              </a>
+            </li>
+            <li>
+              <a href="#workspace" class="drawer-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                <i data-lucide="rocket" class="size-[18px]"></i> Startups
+              </a>
+            </li>
+            <li>
+              <a href="#challenges" class="drawer-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                <i data-lucide="sparkles" class="size-[18px]"></i> Innovation Hub
+              </a>
+            </li>
+          </ul>
+
+          <p
+            class="px-3 pb-2 pt-6 text-[11px] font-semibold uppercase tracking-widest text-sidebar-foreground/45"
+          >
+            Support
+          </p>
+          <ul class="flex flex-col gap-1">
+            <li>
+              <a href="#how" class="drawer-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                <i data-lucide="info" class="size-[18px]"></i> About
+              </a>
+            </li>
+            <li>
+              <a href="#how" class="drawer-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/75 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                <i data-lucide="life-buoy" class="size-[18px]"></i> Help
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+    </div>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main id="top" class="lg:pl-64">
+      <!-- HERO -->
+      <section class="border-b border-border px-6 py-12 md:px-10 lg:py-16">
+        <div
+          class="mx-auto flex max-w-6xl flex-col items-start gap-10 lg:flex-row lg:items-center lg:justify-between"
+        >
+          <div class="max-w-2xl">
+            <p
+              class="mb-4 text-xs font-semibold uppercase tracking-widest text-brand"
+            >
+              Digital Innovation Platform
+            </p>
+            <h1
+              class="text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground md:text-6xl"
+            >
+              Connecting Government <br class="hidden md:block" />
+              with <span class="text-brand">Innovation.</span>
+            </h1>
+            <p
+              class="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
+            >
+              PROCUREX brings public sector challenges and startup solutions
+              together — making it easier to discover, evaluate, pilot and
+              procure innovation for public needs.
+            </p>
+
+            <div class="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href="#workspace"
+                class="inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground transition-transform hover:-translate-y-0.5"
+              >
+                Choose your workspace
+                <i data-lucide="arrow-right" class="size-4"></i>
+              </a>
+              <a
+                href="#how"
+                class="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+              >
+                How it works
+              </a>
+            </div>
+          </div>
+
+          <div
+            class="flex items-center gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm md:gap-6 md:p-8"
+          >
+            <div class="flex flex-col items-center gap-3">
+              <div
+                class="flex size-20 items-center justify-center rounded-2xl bg-brand/10 text-brand md:size-24"
+              >
+                <i data-lucide="landmark" class="size-9 md:size-11"></i>
+              </div>
+              <span class="text-sm font-semibold text-brand">Government</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div
+                class="h-px w-12 border-t-2 border-dashed border-muted-foreground/40 md:w-16"
+              ></div>
+              <i
+                data-lucide="arrow-right"
+                class="mt-1 size-4 text-muted-foreground/60"
+              ></i>
+            </div>
+
+            <div class="flex flex-col items-center gap-3">
+              <div
+                class="flex size-20 items-center justify-center rounded-2xl bg-innovate/10 text-innovate md:size-24"
+              >
+                <i data-lucide="rocket" class="size-9 md:size-11"></i>
+              </div>
+              <span class="text-sm font-semibold text-innovate">Startups</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section class="border-b border-border bg-card px-6 py-8 md:px-10">
+        <div
+          class="mx-auto grid max-w-6xl grid-cols-2 gap-6 md:grid-cols-4"
+        >
+          <div class="text-center md:text-left">
+            <p class="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+              <span class="font-mono">340+</span>
+            </p>
+            <p class="mt-1 text-sm text-muted-foreground">Active challenges</p>
+          </div>
+          <div class="text-center md:text-left">
+            <p class="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+              <span class="font-mono">2,100+</span>
+            </p>
+            <p class="mt-1 text-sm text-muted-foreground">Registered startups</p>
+          </div>
+          <div class="text-center md:text-left">
+            <p class="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+              <span class="font-mono">96</span>
+            </p>
+            <p class="mt-1 text-sm text-muted-foreground">Government departments</p>
+          </div>
+          <div class="text-center md:text-left">
+            <p class="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+              <span class="font-sans">₹</span><span class="font-mono">480 Cr</span>
+            </p>
+            <p class="mt-1 text-sm text-muted-foreground">Innovation procured</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORKSPACE CARDS -->
+      <section id="workspace" class="px-6 py-14 md:px-10">
+        <div class="mx-auto max-w-6xl">
+          <div
+            class="mb-8 flex flex-col gap-2 md:flex-row md:items-end md:justify-between"
+          >
+            <div>
+              <p
+                class="text-xs font-semibold uppercase tracking-widest text-brand"
+              >
+                Get Started
+              </p>
+              <h2 class="mt-2 text-3xl font-bold tracking-tight text-foreground">
+                Choose your workspace
+              </h2>
+            </div>
+            <p class="max-w-sm text-sm text-muted-foreground">
+              Select the space that matches your role in the PROCUREX ecosystem.
+            </p>
+          </div>
+
+          <div class="grid gap-6 lg:grid-cols-2">
+            <!-- Government card -->
+            <div
+              class="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+            >
+              <div class="flex items-center justify-between bg-brand/10 px-7 py-5">
+                <span class="font-mono text-sm font-bold text-muted-foreground">01</span>
+                <span
+                  class="text-[11px] font-semibold uppercase tracking-widest text-brand"
+                  >Official Access</span
+                >
+              </div>
+              <div class="flex flex-1 flex-col p-7">
+                <div
+                  class="flex size-16 items-center justify-center rounded-2xl bg-brand/10 text-brand"
+                >
+                  <i data-lucide="landmark" class="size-8"></i>
+                </div>
+                <h3 class="mt-5 text-2xl font-bold tracking-tight text-foreground">
+                  Government
+                </h3>
+                <p class="text-sm font-semibold text-brand">Government Official</p>
+                <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Create public challenges, discover relevant startups, evaluate
+                  solutions and manage pilot programs — all from one procurement
+                  workspace.
+                </p>
+                <ul class="mt-6 flex flex-col gap-3">
+                  <li class="flex items-center gap-3 text-sm text-foreground">
+                    <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand"><i data-lucide="check" class="size-3"></i></span>
+                    Publish problem statements &amp; RFPs
+                  </li>
+                  <li class="flex items-center gap-3 text-sm text-foreground">
+                    <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand"><i data-lucide="check" class="size-3"></i></span>
+                    AI-matched startup shortlists
+                  </li>
+                  <li class="flex items-center gap-3 text-sm text-foreground">
+                    <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand"><i data-lucide="check" class="size-3"></i></span>
+                    Structured evaluation &amp; scoring
+                  </li>
+                  <li class="flex items-center gap-3 text-sm text-foreground">
+                    <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand"><i data-lucide="check" class="size-3"></i></span>
+                    Pilot tracking and procurement
+                  </li>
+                </ul>
+                <button
+                  type="button"
+                  data-portal="Government"
+                  class="portal-btn mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground transition-transform hover:-translate-y-0.5"
+                >
+                  Enter Government Portal
+                  <i data-lucide="arrow-right" class="size-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Startup card -->
+            <div
+              class="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+            >
+              <div class="flex items-center justify-between bg-innovate/10 px-7 py-5">
+                <span class="font-mono text-sm font-bold text-muted-foreground">02</span>
+                <span
+                  class="text-[11px] font-semibold uppercase tracking-widest text-innovate"
+                  >Innovator Access</span
+                >
+              </div>
+              <div class="flex flex-1 flex-col p-7">
+                <div
+                  class="flex size-16 items-center justify-center rounded-2xl bg-innovate/10 text-innovate"
+                >
+                  <i data-lucide="rocket" class="size-8"></i>
+                </div>
+                <h3 class="mt-5 text-2xl font-bold tracking-tight text-foreground">
+                  Startup / Company
+                </h3>
+                <p class="text-sm font-semibold text-innovate">Innovation Partner</p>
+                <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Discover government opportunities, submit solutions, showcase
+                  capabilities and participate in pilot programs to win public
+                  sector contracts.
+                </p>
+                <ul class="mt-6 flex flex-col gap-3">
+                  <li class="flex items-center gap-3 text-sm text-foreground">
+                    <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-innovate/10 text-innovate"><i data-lucide="check" class="size-3"></i></span>
+                    Browse open government challenges
+                  </li>
+                  <li class="flex items-center gap-3 text-sm text-foreground">
+                    <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-innovate/10 text-innovate"><i data-lucide="check" class="size-3"></i></span>
+                    Submit and track proposals
+                  </li>
+                  <li class="flex items-center gap-3 text-sm text-foreground">
+                    <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-innovate/10 text-innovate"><i data-lucide="check" class="size-3"></i></span>
+                    Build a verified capability profile
+                  </li>
+                  <li class="flex items-center gap-3 text-sm text-foreground">
+                    <span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-innovate/10 text-innovate"><i data-lucide="check" class="size-3"></i></span>
+                    Run pilots &amp; manage contracts
+                  </li>
+                </ul>
+                <button
+                  type="button"
+                  data-portal="Startup"
+                  class="portal-btn mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-innovate px-5 py-3 text-sm font-semibold text-innovate-foreground transition-transform hover:-translate-y-0.5"
+                >
+                  Enter Startup Portal
+                  <i data-lucide="arrow-right" class="size-4"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section id="how" class="border-y border-border bg-card px-6 py-14 md:px-10">
+        <div class="mx-auto max-w-6xl">
+          <div class="mb-10 max-w-2xl">
+            <p class="text-xs font-semibold uppercase tracking-widest text-brand">
+              The Process
+            </p>
+            <h2 class="mt-2 text-3xl font-bold tracking-tight text-foreground">
+              From problem to procurement
+            </h2>
+            <p class="mt-3 text-muted-foreground">
+              A transparent, four-step pathway that turns public sector needs into
+              deployed innovation.
+            </p>
+          </div>
+
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="rounded-2xl border border-border bg-background p-6">
+              <span class="font-mono text-sm font-bold text-muted-foreground/50">Step 1</span>
+              <div class="mt-3 flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+                <i data-lucide="file-text" class="size-6"></i>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-foreground">Publish the challenge</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Government departments define a public problem statement with scope,
+                budget and evaluation criteria.
+              </p>
+            </div>
+            <div class="rounded-2xl border border-border bg-background p-6">
+              <span class="font-mono text-sm font-bold text-muted-foreground/50">Step 2</span>
+              <div class="mt-3 flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+                <i data-lucide="search" class="size-6"></i>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-foreground">Discover solutions</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+                AI matches the challenge with relevant startups and surfaces
+                qualified, verified innovators.
+              </p>
+            </div>
+            <div class="rounded-2xl border border-border bg-background p-6">
+              <span class="font-mono text-sm font-bold text-muted-foreground/50">Step 3</span>
+              <div class="mt-3 flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+                <i data-lucide="clipboard-check" class="size-6"></i>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-foreground">Evaluate &amp; pilot</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Score proposals with a structured rubric, then run controlled pilots
+                with shortlisted teams.
+              </p>
+            </div>
+            <div class="rounded-2xl border border-border bg-background p-6">
+              <span class="font-mono text-sm font-bold text-muted-foreground/50">Step 4</span>
+              <div class="mt-3 flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+                <i data-lucide="handshake" class="size-6"></i>
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-foreground">Procure with confidence</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Convert successful pilots into transparent, audit-ready procurement
+                contracts.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURED CHALLENGES -->
+      <section id="challenges" class="px-6 py-14 md:px-10">
+        <div class="mx-auto max-w-6xl">
+          <div class="mb-8 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-widest text-innovate">
+                Live Now
+              </p>
+              <h2 class="mt-2 text-3xl font-bold tracking-tight text-foreground">
+                Featured challenges
+              </h2>
+            </div>
+            <a href="#workspace" class="inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline">
+              View all challenges
+              <i data-lucide="arrow-up-right" class="size-4"></i>
+            </a>
+          </div>
+
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <!-- Challenge 1 -->
+            <article class="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg">
+              <div class="flex items-center justify-between">
+                <span class="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">Smart Mobility</span>
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-success">
+                  <span class="size-2 rounded-full bg-success"></span>Open
+                </span>
+              </div>
+              <p class="mt-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">Ministry of Urban Affairs</p>
+              <h3 class="mt-1 text-base font-semibold leading-snug text-foreground">AI-driven traffic flow optimization for tier-2 cities</h3>
+              <div class="mt-4 flex items-baseline gap-1">
+                <span class="text-2xl font-bold text-brand"><span class="font-sans">₹</span><span class="font-mono">2.5 Cr</span></span>
+                <span class="text-xs text-muted-foreground">budget</span>
+              </div>
+              <div class="mt-4 flex flex-col gap-2 border-t border-border pt-4 text-sm text-muted-foreground">
+                <div class="flex items-center gap-2"><i data-lucide="map-pin" class="size-4 shrink-0"></i>Pan-India</div>
+                <div class="flex items-center justify-between">
+                  <span class="flex items-center gap-2"><i data-lucide="clock" class="size-4 shrink-0"></i>18 days left</span>
+                  <span class="flex items-center gap-2"><i data-lucide="users" class="size-4 shrink-0"></i>42 applied</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Challenge 2 -->
+            <article class="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg">
+              <div class="flex items-center justify-between">
+                <span class="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">HealthTech</span>
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-success">
+                  <span class="size-2 rounded-full bg-success"></span>Open
+                </span>
+              </div>
+              <p class="mt-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">Department of Health</p>
+              <h3 class="mt-1 text-base font-semibold leading-snug text-foreground">Early-warning system for rural disease outbreaks</h3>
+              <div class="mt-4 flex items-baseline gap-1">
+                <span class="text-2xl font-bold text-brand"><span class="font-sans">₹</span><span class="font-mono">1.8 Cr</span></span>
+                <span class="text-xs text-muted-foreground">budget</span>
+              </div>
+              <div class="mt-4 flex flex-col gap-2 border-t border-border pt-4 text-sm text-muted-foreground">
+                <div class="flex items-center gap-2"><i data-lucide="map-pin" class="size-4 shrink-0"></i>Rajasthan</div>
+                <div class="flex items-center justify-between">
+                  <span class="flex items-center gap-2"><i data-lucide="clock" class="size-4 shrink-0"></i>9 days left</span>
+                  <span class="flex items-center gap-2"><i data-lucide="users" class="size-4 shrink-0"></i>67 applied</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Challenge 3 -->
+            <article class="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg">
+              <div class="flex items-center justify-between">
+                <span class="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">AgriTech</span>
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-innovate">
+                  <span class="size-2 rounded-full bg-innovate"></span>Piloting
+                </span>
+              </div>
+              <p class="mt-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">Ministry of Agriculture</p>
+              <h3 class="mt-1 text-base font-semibold leading-snug text-foreground">Satellite crop-yield prediction for MSP planning</h3>
+              <div class="mt-4 flex items-baseline gap-1">
+                <span class="text-2xl font-bold text-brand"><span class="font-sans">₹</span><span class="font-mono">3.2 Cr</span></span>
+                <span class="text-xs text-muted-foreground">budget</span>
+              </div>
+              <div class="mt-4 flex flex-col gap-2 border-t border-border pt-4 text-sm text-muted-foreground">
+                <div class="flex items-center gap-2"><i data-lucide="map-pin" class="size-4 shrink-0"></i>Punjab &amp; Haryana</div>
+                <div class="flex items-center justify-between">
+                  <span class="flex items-center gap-2"><i data-lucide="clock" class="size-4 shrink-0"></i>In pilot</span>
+                  <span class="flex items-center gap-2"><i data-lucide="users" class="size-4 shrink-0"></i>28 applied</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="px-6 py-14 md:px-10">
+        <div class="mx-auto max-w-6xl overflow-hidden rounded-3xl bg-sidebar px-8 py-12 md:px-14 md:py-16">
+          <div class="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
+            <div class="max-w-xl">
+              <h2 class="text-3xl font-bold tracking-tight text-sidebar-foreground md:text-4xl">
+                Ready to turn public challenges into deployed innovation?
+              </h2>
+              <p class="mt-3 text-sidebar-foreground/70">
+                Join departments and startups already collaborating on PROCUREX to
+                solve problems that matter.
+              </p>
+            </div>
+            <a href="#workspace" class="inline-flex shrink-0 items-center gap-2 rounded-lg bg-innovate px-6 py-3.5 text-sm font-semibold text-innovate-foreground transition-transform hover:-translate-y-0.5">
+              Get started
+              <i data-lucide="arrow-right" class="size-4"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="border-t border-border px-6 py-8 md:px-10">
+        <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted-foreground md:flex-row">
+          <div class="flex items-center gap-3">
+            <div class="flex size-8 items-center justify-center rounded-lg bg-brand text-xs font-bold text-brand-foreground">PX</div>
+            <span class="font-semibold text-foreground">PROCUREX</span>
+          </div>
+          <p>Connecting Government with Innovation.</p>
+          <p>© 2026 PROCUREX. All rights reserved.</p>
+        </div>
+      </footer>
+    </main>
+
+    <!-- ================= PORTAL TOAST ================= -->
+    <div
+      id="toast"
+      class="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 translate-y-4 rounded-xl bg-sidebar px-5 py-3 text-sm font-medium text-sidebar-foreground opacity-0 shadow-lg transition-all duration-300"
+    >
+      Loading portal…
+    </div>
+
+    <!-- ================= VANILLA JS ================= -->
+    <script>
+      // Render all Lucide icons
+      lucide.createIcons();
+
+      // --- Mobile drawer ---
+      const drawer = document.getElementById('mobileDrawer');
+      const openBtn = document.getElementById('openMenuBtn');
+      const closeBtn = document.getElementById('closeMenuBtn');
+      const overlay = document.getElementById('drawerOverlay');
+
+      function openDrawer() {
+        drawer.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeDrawer() {
+        drawer.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+
+      openBtn && openBtn.addEventListener('click', openDrawer);
+      closeBtn && closeBtn.addEventListener('click', closeDrawer);
+      overlay && overlay.addEventListener('click', closeDrawer);
+
+      // Close drawer when a link inside it is clicked
+      document.querySelectorAll('.drawer-link').forEach((link) => {
+        link.addEventListener('click', closeDrawer);
+      });
+
+      // Close drawer on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeDrawer();
+      });
+
+      // --- Active nav link highlighting (desktop) ---
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          navLinks.forEach((l) => {
+            l.classList.remove('bg-sidebar-foreground', 'text-sidebar', 'shadow-sm');
+            l.classList.add('text-sidebar-foreground/75');
+          });
+          link.classList.remove('text-sidebar-foreground/75');
+          link.classList.add('bg-sidebar-foreground', 'text-sidebar', 'shadow-sm');
+        });
+      });
+
+      // --- Portal buttons -> toast feedback ---
+      const toast = document.getElementById('toast');
+      let toastTimer;
+      document.querySelectorAll('.portal-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const portal = btn.getAttribute('data-portal');
+          toast.textContent = 'Opening ' + portal + ' portal…';
+          toast.classList.remove('opacity-0', 'translate-y-4');
+          toast.classList.add('opacity-100', 'translate-y-0');
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-y-4');
+            toast.classList.remove('opacity-100', 'translate-y-0');
+          }, 2200);
+        });
+      });
+    </script>
+  </body>
+</html>
