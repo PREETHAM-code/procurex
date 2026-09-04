@@ -32,29 +32,49 @@
               mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
             },
             colors: {
-              background: '#f4f5f9',
-              foreground: '#1f2233',
+              background: '#f5f6fb',
+              foreground: '#161a2e',
               card: '#ffffff',
-              muted: '#eef0f6',
-              'muted-foreground': '#6b7186',
-              secondary: '#eef0f6',
-              'secondary-foreground': '#3a3f57',
-              border: '#e2e5ee',
+              muted: '#eef0f7',
+              'muted-foreground': '#666d85',
+              secondary: '#eceffa',
+              'secondary-foreground': '#333a58',
+              border: '#e4e7f1',
               brand: '#2b45d4',
+              'brand-dark': '#1e30a3',
               'brand-foreground': '#ffffff',
-              innovate: '#e8722a',
+              innovate: '#ec6c1f',
               'innovate-foreground': '#ffffff',
-              sidebar: '#1b2138',
-              'sidebar-foreground': '#c9cee0',
-              'sidebar-accent': '#2a3150',
+              sidebar: '#151a30',
+              'sidebar-deep': '#0f1324',
+              'sidebar-foreground': '#c9cee2',
+              'sidebar-accent': '#252c48',
               'sidebar-accent-foreground': '#f4f5fb',
-              success: '#3aa76d',
+              success: '#2fa96a',
             },
             borderRadius: {
               lg: '0.75rem',
               xl: '1rem',
               '2xl': '1.25rem',
               '3xl': '1.75rem',
+            },
+            keyframes: {
+              'fade-up': {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              'pulse-line': {
+                '0%,100%': { opacity: '0.3' },
+                '50%': { opacity: '1' },
+              },
+              float: {
+                '0%,100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-6px)' },
+              },
+            },
+            animation: {
+              'pulse-line': 'pulse-line 2s ease-in-out infinite',
+              float: 'float 4s ease-in-out infinite',
             },
           },
         },
@@ -65,7 +85,6 @@
       body {
         font-family: 'Plus Jakarta Sans', sans-serif;
       }
-      /* Hide scrollbar on sidebar for a cleaner look */
       .no-scrollbar::-webkit-scrollbar {
         display: none;
       }
@@ -73,13 +92,41 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
+      /* Dotted grid backdrop */
+      .grid-bg {
+        background-image: radial-gradient(#c8cde3 1px, transparent 1px);
+        background-size: 22px 22px;
+        -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 40%, transparent 75%);
+        mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 40%, transparent 75%);
+      }
+      .text-gradient {
+        background: linear-gradient(120deg, #2b45d4 0%, #5a6ff0 55%, #ec6c1f 130%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      /* Scroll reveal */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      /* Toast */
+      #toast {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+      }
     </style>
   </head>
 
   <body class="min-h-screen bg-background text-foreground antialiased">
     <!-- ================= MOBILE TOP BAR ================= -->
     <div
-      class="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-sidebar px-4 py-3 lg:hidden"
+      class="sticky top-0 z-40 flex items-center justify-between border-b border-sidebar-accent bg-sidebar px-4 py-3 lg:hidden"
     >
       <div class="flex items-center gap-2">
         <div
@@ -101,13 +148,13 @@
 
     <!-- ================= DESKTOP SIDEBAR ================= -->
     <aside
-      class="fixed inset-y-0 left-0 z-40 hidden w-64 bg-sidebar lg:block"
+      class="fixed inset-y-0 left-0 z-40 hidden w-64 bg-gradient-to-b from-sidebar to-sidebar-deep lg:block"
     >
       <div class="flex h-full flex-col no-scrollbar overflow-y-auto">
         <!-- Logo -->
         <div class="flex items-center gap-3 px-6 py-6">
           <div
-            class="flex size-11 items-center justify-center rounded-xl bg-brand font-bold text-brand-foreground"
+            class="flex size-11 items-center justify-center rounded-xl bg-brand font-bold text-brand-foreground shadow-lg shadow-brand/30"
           >
             PX
           </div>
@@ -130,7 +177,7 @@
             <li>
               <a
                 href="#top"
-                class="nav-link flex items-center gap-3 rounded-lg bg-sidebar-foreground px-3 py-2.5 text-sm font-medium text-sidebar shadow-sm"
+                class="nav-link group relative flex items-center gap-3 rounded-lg bg-sidebar-foreground px-3 py-2.5 text-sm font-medium text-sidebar shadow-sm"
               >
                 <i data-lucide="home" class="size-[18px]"></i>
                 Home
@@ -195,7 +242,7 @@
         <!-- Secure badge -->
         <div class="p-4">
           <div
-            class="flex items-center gap-3 rounded-xl bg-sidebar-accent px-4 py-3"
+            class="flex items-center gap-3 rounded-xl border border-sidebar-accent/60 bg-sidebar-accent px-4 py-3"
           >
             <div
               class="flex size-8 items-center justify-center rounded-lg bg-success/20 text-success"
@@ -206,7 +253,7 @@
               <p class="text-sm font-semibold text-sidebar-accent-foreground">
                 Secure
               </p>
-              <p class="text-xs text-sidebar-foreground/60">Platform</p>
+              <p class="text-xs text-sidebar-foreground/60">Govt-grade platform</p>
             </div>
           </div>
         </div>
@@ -217,7 +264,7 @@
     <div id="mobileDrawer" class="fixed inset-0 z-50 hidden lg:hidden">
       <div id="drawerOverlay" class="absolute inset-0 bg-black/50"></div>
       <aside
-        class="absolute inset-y-0 left-0 w-64 bg-sidebar overflow-y-auto no-scrollbar"
+        class="absolute inset-y-0 left-0 w-64 bg-gradient-to-b from-sidebar to-sidebar-deep overflow-y-auto no-scrollbar"
       >
         <button
           type="button"
@@ -295,24 +342,29 @@
     <!-- ================= MAIN CONTENT ================= -->
     <main id="top" class="lg:pl-64">
       <!-- HERO -->
-      <section class="border-b border-border px-6 py-12 md:px-10 lg:py-16">
+      <section class="relative overflow-hidden border-b border-border px-6 py-14 md:px-10 lg:py-20">
+        <div class="pointer-events-none absolute inset-0 grid-bg"></div>
         <div
-          class="mx-auto flex max-w-6xl flex-col items-start gap-10 lg:flex-row lg:items-center lg:justify-between"
+          class="relative mx-auto flex max-w-6xl flex-col items-start gap-12 lg:flex-row lg:items-center lg:justify-between"
         >
           <div class="max-w-2xl">
-            <p
-              class="mb-4 text-xs font-semibold uppercase tracking-widest text-brand"
+            <div
+              class="mb-5 inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand/5 px-3 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand"
             >
+              <span class="relative flex size-2">
+                <span class="absolute inline-flex size-full animate-ping rounded-full bg-brand/60"></span>
+                <span class="relative inline-flex size-2 rounded-full bg-brand"></span>
+              </span>
               Digital Innovation Platform
-            </p>
+            </div>
             <h1
-              class="text-4xl font-extrabold leading-[1.05] tracking-tight text-foreground md:text-6xl"
+              class="text-balance text-4xl font-extrabold leading-[1.03] tracking-tight text-foreground md:text-6xl"
             >
               Connecting Government <br class="hidden md:block" />
-              with <span class="text-brand">Innovation.</span>
+              with <span class="text-gradient">Innovation.</span>
             </h1>
             <p
-              class="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg"
+              class="mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg"
             >
               PROCUREX brings public sector challenges and startup solutions
               together — making it easier to discover, evaluate, pilot and
@@ -322,80 +374,91 @@
             <div class="mt-8 flex flex-wrap items-center gap-3">
               <a
                 href="#workspace"
-                class="inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground transition-transform hover:-translate-y-0.5"
+                class="group inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:bg-brand-dark"
               >
                 Choose your workspace
-                <i data-lucide="arrow-right" class="size-4"></i>
+                <i data-lucide="arrow-right" class="size-4 transition-transform group-hover:translate-x-0.5"></i>
               </a>
               <a
                 href="#how"
                 class="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
               >
+                <i data-lucide="play-circle" class="size-4 text-brand"></i>
                 How it works
               </a>
             </div>
+
+            <div class="mt-8 flex items-center gap-5 text-xs text-muted-foreground">
+              <span class="inline-flex items-center gap-1.5"><i data-lucide="badge-check" class="size-4 text-success"></i> Verified startups</span>
+              <span class="inline-flex items-center gap-1.5"><i data-lucide="lock" class="size-4 text-success"></i> Audit-ready</span>
+              <span class="inline-flex items-center gap-1.5"><i data-lucide="scale" class="size-4 text-success"></i> Transparent</span>
+            </div>
           </div>
 
+          <!-- Connection diagram -->
           <div
-            class="flex items-center gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm md:gap-6 md:p-8"
+            class="relative flex items-center gap-4 rounded-3xl border border-border bg-card/80 p-7 shadow-xl shadow-brand/5 backdrop-blur md:gap-7 md:p-10"
           >
             <div class="flex flex-col items-center gap-3">
               <div
-                class="flex size-20 items-center justify-center rounded-2xl bg-brand/10 text-brand md:size-24"
+                class="flex size-20 animate-float items-center justify-center rounded-2xl bg-brand/10 text-brand md:size-24"
               >
                 <i data-lucide="landmark" class="size-9 md:size-11"></i>
               </div>
               <span class="text-sm font-semibold text-brand">Government</span>
+              <span class="text-[11px] text-muted-foreground">Defines needs</span>
             </div>
 
-            <div class="flex flex-col items-center">
-              <div
-                class="h-px w-12 border-t-2 border-dashed border-muted-foreground/40 md:w-16"
-              ></div>
-              <i
-                data-lucide="arrow-right"
-                class="mt-1 size-4 text-muted-foreground/60"
-              ></i>
+            <div class="flex flex-col items-center gap-2">
+              <div class="flex items-center gap-1">
+                <span class="size-1.5 animate-pulse-line rounded-full bg-brand" style="animation-delay:0s"></span>
+                <span class="size-1.5 animate-pulse-line rounded-full bg-brand/70" style="animation-delay:.2s"></span>
+                <span class="size-1.5 animate-pulse-line rounded-full bg-innovate/70" style="animation-delay:.4s"></span>
+                <span class="size-1.5 animate-pulse-line rounded-full bg-innovate" style="animation-delay:.6s"></span>
+              </div>
+              <div class="flex size-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground">
+                <i data-lucide="repeat" class="size-4"></i>
+              </div>
             </div>
 
             <div class="flex flex-col items-center gap-3">
               <div
-                class="flex size-20 items-center justify-center rounded-2xl bg-innovate/10 text-innovate md:size-24"
+                class="flex size-20 animate-float items-center justify-center rounded-2xl bg-innovate/10 text-innovate md:size-24"
+                style="animation-delay:2s"
               >
                 <i data-lucide="rocket" class="size-9 md:size-11"></i>
               </div>
               <span class="text-sm font-semibold text-innovate">Startups</span>
+              <span class="text-[11px] text-muted-foreground">Build solutions</span>
             </div>
           </div>
         </div>
       </section>
 
       <!-- STATS -->
-      <section class="border-b border-border bg-card px-6 py-8 md:px-10">
-        <div
-          class="mx-auto grid max-w-6xl grid-cols-2 gap-6 md:grid-cols-4"
-        >
-          <div class="text-center md:text-left">
-            <p class="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              <span class="font-mono">340+</span>
+      <section class="border-b border-border bg-card px-6 py-10 md:px-10">
+        <div class="mx-auto grid max-w-6xl grid-cols-2 gap-8 md:grid-cols-4">
+          <div class="reveal text-center md:text-left">
+            <p class="flex items-baseline justify-center gap-1 text-3xl font-bold tracking-tight text-foreground md:justify-start md:text-4xl">
+              <span class="font-mono" data-count="340">0</span><span class="text-brand">+</span>
             </p>
             <p class="mt-1 text-sm text-muted-foreground">Active challenges</p>
           </div>
-          <div class="text-center md:text-left">
-            <p class="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              <span class="font-mono">2,100+</span>
+          <div class="reveal text-center md:text-left" style="transition-delay:.1s">
+            <p class="flex items-baseline justify-center gap-1 text-3xl font-bold tracking-tight text-foreground md:justify-start md:text-4xl">
+              <span class="font-mono" data-count="2100" data-comma="1">0</span><span class="text-brand">+</span>
             </p>
             <p class="mt-1 text-sm text-muted-foreground">Registered startups</p>
           </div>
-          <div class="text-center md:text-left">
+          <div class="reveal text-center md:text-left" style="transition-delay:.2s">
             <p class="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              <span class="font-mono">96</span>
+              <span class="font-mono" data-count="96">0</span>
             </p>
             <p class="mt-1 text-sm text-muted-foreground">Government departments</p>
           </div>
-          <div class="text-center md:text-left">
-            <p class="text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-              <span class="font-sans">₹</span><span class="font-mono">480 Cr</span>
+          <div class="reveal text-center md:text-left" style="transition-delay:.3s">
+            <p class="flex items-baseline justify-center gap-1 text-3xl font-bold tracking-tight text-foreground md:justify-start md:text-4xl">
+              <span class="font-sans text-innovate">₹</span><span class="font-mono" data-count="480">0</span><span class="text-lg">Cr</span>
             </p>
             <p class="mt-1 text-sm text-muted-foreground">Innovation procured</p>
           </div>
@@ -403,15 +466,13 @@
       </section>
 
       <!-- WORKSPACE CARDS -->
-      <section id="workspace" class="px-6 py-14 md:px-10">
+      <section id="workspace" class="px-6 py-16 md:px-10">
         <div class="mx-auto max-w-6xl">
           <div
-            class="mb-8 flex flex-col gap-2 md:flex-row md:items-end md:justify-between"
+            class="mb-10 flex flex-col gap-2 md:flex-row md:items-end md:justify-between"
           >
             <div>
-              <p
-                class="text-xs font-semibold uppercase tracking-widest text-brand"
-              >
+              <p class="text-xs font-semibold uppercase tracking-widest text-brand">
                 Get Started
               </p>
               <h2 class="mt-2 text-3xl font-bold tracking-tight text-foreground">
@@ -426,26 +487,20 @@
           <div class="grid gap-6 lg:grid-cols-2">
             <!-- Government card -->
             <div
-              class="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+              class="reveal group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1.5 hover:border-brand/40 hover:shadow-xl hover:shadow-brand/10"
             >
-              <div class="flex items-center justify-between bg-brand/10 px-7 py-5">
-                <span class="font-mono text-sm font-bold text-muted-foreground">01</span>
-                <span
-                  class="text-[11px] font-semibold uppercase tracking-widest text-brand"
-                  >Official Access</span
-                >
+              <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand to-brand/40"></div>
+              <div class="flex items-center justify-between bg-brand/5 px-7 py-5">
+                <span class="font-mono text-sm font-bold text-brand/70">01</span>
+                <span class="text-[11px] font-semibold uppercase tracking-widest text-brand">Official Access</span>
               </div>
               <div class="flex flex-1 flex-col p-7">
-                <div
-                  class="flex size-16 items-center justify-center rounded-2xl bg-brand/10 text-brand"
-                >
+                <div class="flex size-16 items-center justify-center rounded-2xl bg-brand/10 text-brand transition-transform group-hover:scale-105">
                   <i data-lucide="landmark" class="size-8"></i>
                 </div>
-                <h3 class="mt-5 text-2xl font-bold tracking-tight text-foreground">
-                  Government
-                </h3>
+                <h3 class="mt-5 text-2xl font-bold tracking-tight text-foreground">Government</h3>
                 <p class="text-sm font-semibold text-brand">Government Official</p>
-                <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+                <p class="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
                   Create public challenges, discover relevant startups, evaluate
                   solutions and manage pilot programs — all from one procurement
                   workspace.
@@ -471,7 +526,7 @@
                 <button
                   type="button"
                   data-portal="Government"
-                  class="portal-btn mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground transition-transform hover:-translate-y-0.5"
+                  class="portal-btn mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-brand px-5 py-3 text-sm font-semibold text-brand-foreground transition-all hover:-translate-y-0.5 hover:bg-brand-dark"
                 >
                   Enter Government Portal
                   <i data-lucide="arrow-right" class="size-4"></i>
@@ -481,26 +536,21 @@
 
             <!-- Startup card -->
             <div
-              class="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+              class="reveal group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:-translate-y-1.5 hover:border-innovate/40 hover:shadow-xl hover:shadow-innovate/10"
+              style="transition-delay:.1s"
             >
-              <div class="flex items-center justify-between bg-innovate/10 px-7 py-5">
-                <span class="font-mono text-sm font-bold text-muted-foreground">02</span>
-                <span
-                  class="text-[11px] font-semibold uppercase tracking-widest text-innovate"
-                  >Innovator Access</span
-                >
+              <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-innovate to-innovate/40"></div>
+              <div class="flex items-center justify-between bg-innovate/5 px-7 py-5">
+                <span class="font-mono text-sm font-bold text-innovate/70">02</span>
+                <span class="text-[11px] font-semibold uppercase tracking-widest text-innovate">Innovator Access</span>
               </div>
               <div class="flex flex-1 flex-col p-7">
-                <div
-                  class="flex size-16 items-center justify-center rounded-2xl bg-innovate/10 text-innovate"
-                >
+                <div class="flex size-16 items-center justify-center rounded-2xl bg-innovate/10 text-innovate transition-transform group-hover:scale-105">
                   <i data-lucide="rocket" class="size-8"></i>
                 </div>
-                <h3 class="mt-5 text-2xl font-bold tracking-tight text-foreground">
-                  Startup / Company
-                </h3>
+                <h3 class="mt-5 text-2xl font-bold tracking-tight text-foreground">Startup / Company</h3>
                 <p class="text-sm font-semibold text-innovate">Innovation Partner</p>
-                <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+                <p class="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
                   Discover government opportunities, submit solutions, showcase
                   capabilities and participate in pilot programs to win public
                   sector contracts.
@@ -526,7 +576,7 @@
                 <button
                   type="button"
                   data-portal="Startup"
-                  class="portal-btn mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-innovate px-5 py-3 text-sm font-semibold text-innovate-foreground transition-transform hover:-translate-y-0.5"
+                  class="portal-btn mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-innovate px-5 py-3 text-sm font-semibold text-innovate-foreground transition-all hover:-translate-y-0.5 hover:brightness-95"
                 >
                   Enter Startup Portal
                   <i data-lucide="arrow-right" class="size-4"></i>
@@ -538,25 +588,24 @@
       </section>
 
       <!-- HOW IT WORKS -->
-      <section id="how" class="border-y border-border bg-card px-6 py-14 md:px-10">
+      <section id="how" class="border-y border-border bg-card px-6 py-16 md:px-10">
         <div class="mx-auto max-w-6xl">
-          <div class="mb-10 max-w-2xl">
-            <p class="text-xs font-semibold uppercase tracking-widest text-brand">
-              The Process
-            </p>
-            <h2 class="mt-2 text-3xl font-bold tracking-tight text-foreground">
-              From problem to procurement
-            </h2>
-            <p class="mt-3 text-muted-foreground">
+          <div class="mb-12 max-w-2xl">
+            <p class="text-xs font-semibold uppercase tracking-widest text-brand">The Process</p>
+            <h2 class="mt-2 text-3xl font-bold tracking-tight text-foreground">From problem to procurement</h2>
+            <p class="mt-3 text-pretty text-muted-foreground">
               A transparent, four-step pathway that turns public sector needs into
               deployed innovation.
             </p>
           </div>
 
-          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="rounded-2xl border border-border bg-background p-6">
+          <div class="relative grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <!-- connecting line on large screens -->
+            <div class="pointer-events-none absolute left-0 right-0 top-14 hidden h-px bg-gradient-to-r from-brand/30 via-border to-innovate/30 lg:block"></div>
+
+            <div class="reveal relative rounded-2xl border border-border bg-background p-6">
               <span class="font-mono text-sm font-bold text-muted-foreground/50">Step 1</span>
-              <div class="mt-3 flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+              <div class="relative z-10 mt-3 flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand ring-8 ring-card">
                 <i data-lucide="file-text" class="size-6"></i>
               </div>
               <h3 class="mt-4 text-lg font-semibold text-foreground">Publish the challenge</h3>
@@ -565,9 +614,10 @@
                 budget and evaluation criteria.
               </p>
             </div>
-            <div class="rounded-2xl border border-border bg-background p-6">
+
+            <div class="reveal relative rounded-2xl border border-border bg-background p-6" style="transition-delay:.1s">
               <span class="font-mono text-sm font-bold text-muted-foreground/50">Step 2</span>
-              <div class="mt-3 flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+              <div class="relative z-10 mt-3 flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand ring-8 ring-card">
                 <i data-lucide="search" class="size-6"></i>
               </div>
               <h3 class="mt-4 text-lg font-semibold text-foreground">Discover solutions</h3>
@@ -576,9 +626,10 @@
                 qualified, verified innovators.
               </p>
             </div>
-            <div class="rounded-2xl border border-border bg-background p-6">
+
+            <div class="reveal relative rounded-2xl border border-border bg-background p-6" style="transition-delay:.2s">
               <span class="font-mono text-sm font-bold text-muted-foreground/50">Step 3</span>
-              <div class="mt-3 flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+              <div class="relative z-10 mt-3 flex size-12 items-center justify-center rounded-xl bg-innovate/10 text-innovate ring-8 ring-card">
                 <i data-lucide="clipboard-check" class="size-6"></i>
               </div>
               <h3 class="mt-4 text-lg font-semibold text-foreground">Evaluate &amp; pilot</h3>
@@ -587,9 +638,10 @@
                 with shortlisted teams.
               </p>
             </div>
-            <div class="rounded-2xl border border-border bg-background p-6">
+
+            <div class="reveal relative rounded-2xl border border-border bg-background p-6" style="transition-delay:.3s">
               <span class="font-mono text-sm font-bold text-muted-foreground/50">Step 4</span>
-              <div class="mt-3 flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand">
+              <div class="relative z-10 mt-3 flex size-12 items-center justify-center rounded-xl bg-innovate/10 text-innovate ring-8 ring-card">
                 <i data-lucide="handshake" class="size-6"></i>
               </div>
               <h3 class="mt-4 text-lg font-semibold text-foreground">Procure with confidence</h3>
@@ -603,30 +655,25 @@
       </section>
 
       <!-- FEATURED CHALLENGES -->
-      <section id="challenges" class="px-6 py-14 md:px-10">
+      <section id="challenges" class="px-6 py-16 md:px-10">
         <div class="mx-auto max-w-6xl">
-          <div class="mb-8 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+          <div class="mb-10 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
-              <p class="text-xs font-semibold uppercase tracking-widest text-innovate">
-                Live Now
-              </p>
-              <h2 class="mt-2 text-3xl font-bold tracking-tight text-foreground">
-                Featured challenges
-              </h2>
+              <p class="text-xs font-semibold uppercase tracking-widest text-innovate">Live Now</p>
+              <h2 class="mt-2 text-3xl font-bold tracking-tight text-foreground">Featured challenges</h2>
             </div>
-            <a href="#workspace" class="inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline">
-              View all challenges
-              <i data-lucide="arrow-up-right" class="size-4"></i>
+            <a href="#" class="inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline">
+              View all challenges <i data-lucide="arrow-up-right" class="size-4"></i>
             </a>
           </div>
 
           <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <!-- Challenge 1 -->
-            <article class="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg">
+            <article class="reveal flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg">
               <div class="flex items-center justify-between">
                 <span class="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">Smart Mobility</span>
                 <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-success">
-                  <span class="size-2 rounded-full bg-success"></span>Open
+                  <span class="size-2 rounded-full bg-success"></span> Open
                 </span>
               </div>
               <p class="mt-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">Ministry of Urban Affairs</p>
@@ -635,21 +682,29 @@
                 <span class="text-2xl font-bold text-brand"><span class="font-sans">₹</span><span class="font-mono">2.5 Cr</span></span>
                 <span class="text-xs text-muted-foreground">budget</span>
               </div>
+              <div class="mt-4">
+                <div class="mb-1 flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Applications</span><span>42 / 60</span>
+                </div>
+                <div class="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                  <div class="h-full rounded-full bg-brand" style="width:70%"></div>
+                </div>
+              </div>
               <div class="mt-4 flex flex-col gap-2 border-t border-border pt-4 text-sm text-muted-foreground">
-                <div class="flex items-center gap-2"><i data-lucide="map-pin" class="size-4 shrink-0"></i>Pan-India</div>
+                <div class="flex items-center gap-2"><i data-lucide="map-pin" class="size-4 shrink-0"></i> Pan-India</div>
                 <div class="flex items-center justify-between">
-                  <span class="flex items-center gap-2"><i data-lucide="clock" class="size-4 shrink-0"></i>18 days left</span>
-                  <span class="flex items-center gap-2"><i data-lucide="users" class="size-4 shrink-0"></i>42 applied</span>
+                  <span class="flex items-center gap-2"><i data-lucide="clock" class="size-4 shrink-0"></i> 18 days left</span>
+                  <span class="flex items-center gap-2"><i data-lucide="users" class="size-4 shrink-0"></i> 42 applied</span>
                 </div>
               </div>
             </article>
 
             <!-- Challenge 2 -->
-            <article class="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg">
+            <article class="reveal flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg" style="transition-delay:.1s">
               <div class="flex items-center justify-between">
                 <span class="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">HealthTech</span>
                 <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-success">
-                  <span class="size-2 rounded-full bg-success"></span>Open
+                  <span class="size-2 rounded-full bg-success"></span> Open
                 </span>
               </div>
               <p class="mt-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">Department of Health</p>
@@ -658,21 +713,29 @@
                 <span class="text-2xl font-bold text-brand"><span class="font-sans">₹</span><span class="font-mono">1.8 Cr</span></span>
                 <span class="text-xs text-muted-foreground">budget</span>
               </div>
+              <div class="mt-4">
+                <div class="mb-1 flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Applications</span><span>67 / 80</span>
+                </div>
+                <div class="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                  <div class="h-full rounded-full bg-brand" style="width:84%"></div>
+                </div>
+              </div>
               <div class="mt-4 flex flex-col gap-2 border-t border-border pt-4 text-sm text-muted-foreground">
-                <div class="flex items-center gap-2"><i data-lucide="map-pin" class="size-4 shrink-0"></i>Rajasthan</div>
+                <div class="flex items-center gap-2"><i data-lucide="map-pin" class="size-4 shrink-0"></i> Rajasthan</div>
                 <div class="flex items-center justify-between">
-                  <span class="flex items-center gap-2"><i data-lucide="clock" class="size-4 shrink-0"></i>9 days left</span>
-                  <span class="flex items-center gap-2"><i data-lucide="users" class="size-4 shrink-0"></i>67 applied</span>
+                  <span class="flex items-center gap-2"><i data-lucide="clock" class="size-4 shrink-0"></i> 9 days left</span>
+                  <span class="flex items-center gap-2"><i data-lucide="users" class="size-4 shrink-0"></i> 67 applied</span>
                 </div>
               </div>
             </article>
 
             <!-- Challenge 3 -->
-            <article class="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-brand/40 hover:shadow-lg">
+            <article class="reveal flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-innovate/40 hover:shadow-lg" style="transition-delay:.2s">
               <div class="flex items-center justify-between">
                 <span class="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">AgriTech</span>
                 <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-innovate">
-                  <span class="size-2 rounded-full bg-innovate"></span>Piloting
+                  <span class="size-2 rounded-full bg-innovate"></span> Piloting
                 </span>
               </div>
               <p class="mt-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">Ministry of Agriculture</p>
@@ -681,11 +744,19 @@
                 <span class="text-2xl font-bold text-brand"><span class="font-sans">₹</span><span class="font-mono">3.2 Cr</span></span>
                 <span class="text-xs text-muted-foreground">budget</span>
               </div>
+              <div class="mt-4">
+                <div class="mb-1 flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Pilot progress</span><span>3 / 5 teams</span>
+                </div>
+                <div class="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                  <div class="h-full rounded-full bg-innovate" style="width:60%"></div>
+                </div>
+              </div>
               <div class="mt-4 flex flex-col gap-2 border-t border-border pt-4 text-sm text-muted-foreground">
-                <div class="flex items-center gap-2"><i data-lucide="map-pin" class="size-4 shrink-0"></i>Punjab &amp; Haryana</div>
+                <div class="flex items-center gap-2"><i data-lucide="map-pin" class="size-4 shrink-0"></i> Punjab &amp; Haryana</div>
                 <div class="flex items-center justify-between">
-                  <span class="flex items-center gap-2"><i data-lucide="clock" class="size-4 shrink-0"></i>In pilot</span>
-                  <span class="flex items-center gap-2"><i data-lucide="users" class="size-4 shrink-0"></i>28 applied</span>
+                  <span class="flex items-center gap-2"><i data-lucide="clock" class="size-4 shrink-0"></i> In pilot</span>
+                  <span class="flex items-center gap-2"><i data-lucide="users" class="size-4 shrink-0"></i> 28 applied</span>
                 </div>
               </div>
             </article>
@@ -694,21 +765,23 @@
       </section>
 
       <!-- CTA -->
-      <section class="px-6 py-14 md:px-10">
-        <div class="mx-auto max-w-6xl overflow-hidden rounded-3xl bg-sidebar px-8 py-12 md:px-14 md:py-16">
+      <section class="px-6 py-16 md:px-10">
+        <div class="mx-auto max-w-6xl overflow-hidden rounded-3xl bg-gradient-to-br from-sidebar to-sidebar-deep px-8 py-14 shadow-xl md:px-14 md:py-16">
           <div class="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
             <div class="max-w-xl">
-              <h2 class="text-3xl font-bold tracking-tight text-sidebar-foreground md:text-4xl">
+              <h2 class="text-balance text-3xl font-bold tracking-tight text-sidebar-foreground md:text-4xl">
                 Ready to turn public challenges into deployed innovation?
               </h2>
-              <p class="mt-3 text-sidebar-foreground/70">
+              <p class="mt-3 text-pretty text-sidebar-foreground/70">
                 Join departments and startups already collaborating on PROCUREX to
                 solve problems that matter.
               </p>
             </div>
-            <a href="#workspace" class="inline-flex shrink-0 items-center gap-2 rounded-lg bg-innovate px-6 py-3.5 text-sm font-semibold text-innovate-foreground transition-transform hover:-translate-y-0.5">
-              Get started
-              <i data-lucide="arrow-right" class="size-4"></i>
+            <a
+              href="#workspace"
+              class="inline-flex shrink-0 items-center gap-2 rounded-lg bg-innovate px-6 py-3.5 text-sm font-semibold text-innovate-foreground shadow-lg shadow-innovate/25 transition-transform hover:-translate-y-0.5"
+            >
+              Get started <i data-lucide="arrow-right" class="size-4"></i>
             </a>
           </div>
         </div>
@@ -727,75 +800,137 @@
       </footer>
     </main>
 
-    <!-- ================= PORTAL TOAST ================= -->
+    <!-- ================= TOAST ================= -->
     <div
       id="toast"
-      class="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 translate-y-4 rounded-xl bg-sidebar px-5 py-3 text-sm font-medium text-sidebar-foreground opacity-0 shadow-lg transition-all duration-300"
+      class="pointer-events-none fixed bottom-6 left-1/2 z-[60] flex -translate-x-1/2 translate-y-24 items-center gap-3 rounded-xl border border-border bg-card px-5 py-3 opacity-0 shadow-xl"
     >
-      Loading portal…
+      <span class="flex size-8 items-center justify-center rounded-lg bg-success/15 text-success">
+        <i data-lucide="check-circle-2" class="size-5"></i>
+      </span>
+      <p id="toastText" class="text-sm font-medium text-foreground"></p>
     </div>
 
-    <!-- ================= VANILLA JS ================= -->
+    <!-- ================= SCRIPTS ================= -->
     <script>
-      // Render all Lucide icons
+      // Render icons
       lucide.createIcons();
 
-      // --- Mobile drawer ---
+      // ---- Mobile drawer ----
       const drawer = document.getElementById('mobileDrawer');
       const openBtn = document.getElementById('openMenuBtn');
       const closeBtn = document.getElementById('closeMenuBtn');
       const overlay = document.getElementById('drawerOverlay');
 
-      function openDrawer() {
-        drawer.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-      function closeDrawer() {
-        drawer.classList.add('hidden');
-        document.body.style.overflow = '';
-      }
+      const openDrawer = () => drawer.classList.remove('hidden');
+      const closeDrawer = () => drawer.classList.add('hidden');
 
       openBtn && openBtn.addEventListener('click', openDrawer);
       closeBtn && closeBtn.addEventListener('click', closeDrawer);
       overlay && overlay.addEventListener('click', closeDrawer);
-
-      // Close drawer when a link inside it is clicked
-      document.querySelectorAll('.drawer-link').forEach((link) => {
-        link.addEventListener('click', closeDrawer);
-      });
-
-      // Close drawer on Escape
+      document.querySelectorAll('.drawer-link').forEach((link) =>
+        link.addEventListener('click', closeDrawer)
+      );
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeDrawer();
       });
 
-      // --- Active nav link highlighting (desktop) ---
-      const navLinks = document.querySelectorAll('.nav-link');
-      navLinks.forEach((link) => {
-        link.addEventListener('click', () => {
-          navLinks.forEach((l) => {
-            l.classList.remove('bg-sidebar-foreground', 'text-sidebar', 'shadow-sm');
-            l.classList.add('text-sidebar-foreground/75');
-          });
-          link.classList.remove('text-sidebar-foreground/75');
-          link.classList.add('bg-sidebar-foreground', 'text-sidebar', 'shadow-sm');
-        });
-      });
+      // ---- Active nav highlighting on scroll ----
+      const navLinks = Array.from(document.querySelectorAll('.nav-link'));
+      const activeClasses = ['bg-sidebar-foreground', 'text-sidebar', 'shadow-sm'];
+      const idleClasses = ['text-sidebar-foreground/75'];
 
-      // --- Portal buttons -> toast feedback ---
+      function setActive(link) {
+        navLinks.forEach((l) => {
+          l.classList.remove(...activeClasses);
+          l.classList.add(...idleClasses);
+        });
+        if (link) {
+          link.classList.add(...activeClasses);
+          link.classList.remove(...idleClasses);
+        }
+      }
+
+      const sections = ['top', 'workspace', 'how', 'challenges']
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+
+      const spy = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              const match = navLinks.find(
+                (l) => l.getAttribute('href') === '#' + id
+              );
+              if (match) setActive(match);
+            }
+          });
+        },
+        { rootMargin: '-45% 0px -50% 0px' }
+      );
+      sections.forEach((s) => spy.observe(s));
+
+      // ---- Scroll reveal ----
+      const revealer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in');
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => revealer.observe(el));
+
+      // ---- Count-up stats ----
+      function animateCount(el) {
+        const target = parseFloat(el.dataset.count);
+        const useComma = el.dataset.comma === '1';
+        const duration = 1400;
+        const start = performance.now();
+        function tick(now) {
+          const p = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          let val = Math.round(target * eased);
+          el.textContent = useComma ? val.toLocaleString('en-IN') : val;
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      const counters = document.querySelectorAll('[data-count]');
+      const countObserver = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              animateCount(entry.target);
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.6 }
+      );
+      counters.forEach((c) => countObserver.observe(c));
+
+      // ---- Toast on portal buttons ----
       const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toastText');
       let toastTimer;
+
       document.querySelectorAll('.portal-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
-          const portal = btn.getAttribute('data-portal');
-          toast.textContent = 'Opening ' + portal + ' portal…';
-          toast.classList.remove('opacity-0', 'translate-y-4');
-          toast.classList.add('opacity-100', 'translate-y-0');
+          const portal = btn.dataset.portal;
+          toastText.textContent = `Opening the ${portal} portal…`;
+          toast.classList.remove('translate-y-24', 'opacity-0');
+          toast.classList.add('translate-y-0', 'opacity-100');
           clearTimeout(toastTimer);
           toastTimer = setTimeout(() => {
-            toast.classList.add('opacity-0', 'translate-y-4');
-            toast.classList.remove('opacity-100', 'translate-y-0');
-          }, 2200);
+            toast.classList.add('translate-y-24', 'opacity-0');
+            toast.classList.remove('translate-y-0', 'opacity-100');
+          }, 2600);
         });
       });
     </script>
